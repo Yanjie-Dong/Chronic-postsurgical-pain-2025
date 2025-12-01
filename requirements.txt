@@ -190,7 +190,3 @@ xgboost==2.0.3
 yarl==1.9.4
 zict==3.0.0
 zipp==3.17.0
-
-
-
-Trial 571 finished with value: 0.7843991155800467 and parameters: {'eta': 0.06612763694084936, 'gamma': 0.7045053202173472, 'subsample': 0.9379809080805742, 'colsample_bytree': 0.954850818243498, 'min_child_weight': 3, 'alpha': 1, 'max_delta_step': 1
