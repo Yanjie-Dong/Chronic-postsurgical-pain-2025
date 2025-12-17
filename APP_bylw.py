@@ -120,7 +120,7 @@ clinical_feature_names = {
 # In[31]:
 
 
-st.title("CPSP Prediction")
+st.title("CSAC_术后慢性疼痛预测模型")
 # 创建两列
 col1, col2 = st.columns(2)
 
