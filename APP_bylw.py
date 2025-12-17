@@ -133,38 +133,98 @@ binary_features = ["Gender", "Postoperative_drainage_No", "Operation_grading_III
                   'Surgery_site_Abdominal',
                   'GAD_easily_annoyed_or_irritable']  # 示例：这些特征只能取0或1
 
-for feature in selected_features:
-    display_name = clinical_feature_names.get(feature, feature)  # 获取临床名称
-    if feature in binary_features:
-        # 二元特征，只能取0或1
-        inputs[feature] = st.selectbox(
-            display_name, 
-            options=[0, 1],
-            format_func=lambda x: 'No (0)' if x == 0 else 'Yes (1)'
-        )
-    else:
-        # 连续特征，使用手动定义的范围和步长
-        min_val = feature_ranges[feature]["min"]
-        max_val = feature_ranges[feature]["max"]
-        step = feature_ranges[feature]["step"]
-        
-        if max_val is None:
-            # 如果没有设置最大值，允许用户输入任意大的值
-            inputs[feature] = st.number_input(
+# 将特征分成两组（前10个和后10个）
+mid_point = len(selected_features) // 2
+left_features = selected_features[:mid_point]
+right_features = selected_features[mid_point:]
+
+# 在第一列显示前10个特征
+with col1:
+    for feature in left_features:
+        display_name = clinical_feature_names.get(feature, feature)  # 获取临床名称
+        if feature in binary_features:
+            # 二元特征，只能取0或1
+            inputs[feature] = st.selectbox(
                 display_name, 
-                min_value=min_val,
-                step=step,
-                value=min_val  # 默认值设置为最小值
+                options=[0, 1],
+                format_func=lambda x: 'No (0)' if x == 0 else 'Yes (1)',
+                key=feature
             )
         else:
-            # 如果设置了最大值，使用范围限制
-            inputs[feature] = st.number_input(
-                display_name,
-                min_value=min_val,
-                max_value=max_val,
-                step=step,
-                value=min_val  # 默认值设置为最小值
+            # 连续特征，使用手动定义的范围和步长
+            if feature in feature_ranges:
+                min_val = feature_ranges[feature]["min"]
+                max_val = feature_ranges[feature]["max"]
+                step = feature_ranges[feature]["step"]
+            else:
+                # 如果没有设置范围，使用默认值
+                min_val = 0.0
+                max_val = None
+                step = 1.0
+            
+            if max_val is None:
+                # 如果没有设置最大值，允许用户输入任意大的值
+                inputs[feature] = st.number_input(
+                    display_name, 
+                    min_value=min_val,
+                    step=step,
+                    value=min_val,  # 默认值设置为最小值
+                    key=feature
+                )
+            else:
+                # 如果设置了最大值，使用范围限制
+                inputs[feature] = st.number_input(
+                    display_name,
+                    min_value=min_val,
+                    max_value=max_val,
+                    step=step,
+                    value=min_val,  # 默认值设置为最小值
+                    key=feature
+                )
+
+# 在第二列显示后10个特征
+with col2:
+    for feature in right_features:
+        display_name = clinical_feature_names.get(feature, feature)  # 获取临床名称
+        if feature in binary_features:
+            # 二元特征，只能取0或1
+            inputs[feature] = st.selectbox(
+                display_name, 
+                options=[0, 1],
+                format_func=lambda x: 'No (0)' if x == 0 else 'Yes (1)',
+                key=feature
             )
+        else:
+            # 连续特征，使用手动定义的范围和步长
+            if feature in feature_ranges:
+                min_val = feature_ranges[feature]["min"]
+                max_val = feature_ranges[feature]["max"]
+                step = feature_ranges[feature]["step"]
+            else:
+                # 如果没有设置范围，使用默认值
+                min_val = 0.0
+                max_val = None
+                step = 1.0
+            
+            if max_val is None:
+                # 如果没有设置最大值，允许用户输入任意大的值
+                inputs[feature] = st.number_input(
+                    display_name, 
+                    min_value=min_val,
+                    step=step,
+                    value=min_val,  # 默认值设置为最小值
+                    key=feature
+                )
+            else:
+                # 如果设置了最大值，使用范围限制
+                inputs[feature] = st.number_input(
+                    display_name,
+                    min_value=min_val,
+                    max_value=max_val,
+                    step=step,
+                    value=min_val,  # 默认值设置为最小值
+                    key=feature
+                )
 
 
 # In[32]:
