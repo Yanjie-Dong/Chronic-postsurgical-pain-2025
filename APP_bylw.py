@@ -55,7 +55,7 @@ feature_ranges = {
     "Postoperative_pain_POD3": {"min": 0.0, "max": 10.0,"step": 1.0},
     "Rehabilitation_at_POD30": {"min": 0.0, "max": 10.0,"step": 1.0},
     "pulse__agg_linear_trend__attr_rvalue__chunk_len_10__f_agg_mean": {"min": -1.0, "max": 1.0,"step": 0.1},
-    "Postoperative_pain_POD1": {"min": 0.0, "max": 1.0,"step": 0.1},
+    "Postoperative_pain_POD1": {"min": 0.0, "max": 10.0,"step": 0.1},
     "rr__fft_coefficient__attr_angle__coeff_3": {"min": -180.0, "max": 180.0,"step": 0.1},
     "co2__agg_linear_trend__attr_rvalue__chunk_len_10__f_agg_mean": {"min": -1.0, "max": 1.0,"step": 0.1},
     "map__fft_coefficient__attr_angle__coeff_4": {"min": -180.0, "max": 180.0,"step":0.1}
