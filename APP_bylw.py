@@ -121,6 +121,10 @@ clinical_feature_names = {
 
 
 st.title("CPSP Prediction")
+
+# 创建两列
+col1, col2 = st.columns(2)
+
 inputs = {}
 
 # 定义哪些特征是二元的
