@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[25]:
 
 
 # 工作环境
@@ -12,7 +12,7 @@ warnings.filterwarnings('ignore')
 print("当前工作目录:", current_directory)
 
 
-# In[2]:
+# In[26]:
 
 
 import streamlit as st
@@ -23,33 +23,27 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 
-# In[3]:
+# In[27]:
 
 
 # 设置 Matplotlib 的全局字体为 Arial
 plt.rcParams['font.family'] = 'Arial'
 
 
-# In[13]:
+# In[28]:
 
 
 # 
 model = joblib.load("simple_model_bylw.pkl")
 min_max_params = joblib.load("min_max_params_app_bylw.pkl")
-selected_features = joblib.load("selected_features_app_bylw.pkl")  # 25
+selected_features = joblib.load("selected_features_app_bylw.pkl")  # 20
 
 
-# In[14]:
+# In[30]:
 
 
 feature_names = min_max_params["feature_names"]
 selected_indices = [feature_names.index(f) for f in selected_features]
-
-
-# In[21]:
-
-
-
 
 
 # In[17]:
@@ -60,12 +54,11 @@ feature_ranges = {
     "Postoperative_pain_POD30": {"min": 0.0, "max": 10.0,"step": 1.0},
     "Postoperative_pain_POD3": {"min": 0.0, "max": 10.0,"step": 1.0},
     "Rehabilitation_at_POD30": {"min": 0.0, "max": 10.0,"step": 1.0},
-    "Treponema_Pallidum_Antibody": {"min": 1.0, "max": 12.0,"step": 1.0},
+    "pulse__agg_linear_trend__attr_rvalue__chunk_len_10__f_agg_mean": {"min": -1.0, "max": 1.0,"step": 0.1},
     "Postoperative_pain_POD1": {"min": 0.0, "max": 1.0,"step": 0.1},
-    "Hospitalizing_expenses": {"min": 0.0, "max": 10.0,"step": 1.0},
-    "Hepatitis_B_e_Antigen": {"min": 0.0, "max": 10.0,"step": 1.0},
-    "map__agg_linear_trend__attr_slope__chunk_len_10__f_agg_min": {"min": 0.0, "max": None,"step":0.1},
-    "Pain_score_v0": {"min": 0.0, "max": None,"step": 0.1},
+    "rr__fft_coefficient__attr_angle__coeff_3": {"min": -180.0, "max": 180.0,"step": 0.1},
+    "co2__agg_linear_trend__attr_rvalue__chunk_len_10__f_agg_mean": {"min": -1.0, "max": 1.0,"step": 0.1},
+    "map__fft_coefficient__attr_angle__coeff_4": {"min": -180.0, "max": 180.0,"step":0.1}
     #连续特征的范围
 }
 
@@ -74,14 +67,13 @@ feature_ranges = {
 
 
 clinical_feature_names = {
-      'Postoperative_pain_POD30': '术后30天亚急性疼痛NRS评分',
-     'Postoperative_pain_POD3' : '术后3天急性疼痛NRS评分', 
-    'Rehabilitation_at_POD30': '术后30天主观康复程度', 
-    'Gender':'性别', 
-    'Postoperative_pain_POD1': '术后1天急性疼痛NRS评分',
+     'Postoperative_pain_POD1': '术后1天急性疼痛NRS评分',
+     'Postoperative_pain_POD3': '术后3天急性疼痛NRS评分',
+     'Postoperative_pain_POD30': '术后30天亚急性疼痛NRS评分',
+    'Rehabilitation_at_POD30':'术后30天主观康复情况',
      'Gender' : '性别', 
-    'Postoperative_drainage_Yes': '引流管安置', 
-    'PHQ_trouble_in_sleep':'PHQ9-难以入睡或保持睡眠，或睡得太多', 
+    'Postoperative_drainage_No': '引流管安置', 
+    'PHQ_trouble_in_sleep':'PHQ-9：难以入睡或保持睡眠，或睡得太多', 
         'Open_surgery':'开放手术', 
         'Pain_score_v0':'术前疼痛NRS评分', 
         'Treponema_Pallidum_Antibody':'术前血清梅毒螺旋体抗体水平', 
@@ -90,44 +82,56 @@ clinical_feature_names = {
         'Sleep_score_v0':'术前PSQI评分', 
     'PCA':'患者自控镇痛',
     'Thrombus_risk_No':'无血栓风险', 
-    'map__agg_linear_trend__attr_slope__chunk_len_10__f_agg_min':'术中平均动脉压最低值的长期趋势', 
+    'pulse__cwt_coefficients__coeff_0__w_2__widths_251020':'手术开始阶段心率中频波动强度', 
     'Surgery_site_Thoracic':'胸科手术', 
         'Hepatitis_B_e_Antigen':'术前血清乙型肝炎E抗原水平',
         'Operation_grading_III': 'III级手术', 
     'Hemoglobin':'术前全血血红蛋白水平', 
         'pulse__cwt_coefficients__coeff_0__w_2':'手术开始阶段心率中频波动强度',
     'HIV_Antigen.Antibody_Combination':'术前血清HIV抗原抗体联合检测值', 
-    'GAD_easily_annoyed_or_irritable':'GAD7-变得容易烦恼或急躁',
+    'GAD_easily_annoyed_or_irritable':'GAD-7：变得容易烦恼或急躁',
     'Surgical_season_秋':'秋季手术',
-    'PQSI_have_pain':'PSQI-疼痛不适',
-    'IES_did_not_deal_with_them_No':'IES-R-处理本次疾病感受',
+    'PQSI_have_pain':'PSQI：疼痛不适',
+    'IES_did_not_deal_with_them_No':'IES-R：处理本次疾病感受',
     'Surgery_site_Abdominal':'腹部手术',
     'Cancer_surgery': '肿瘤手术',
     'Thrombus_risk_Middle_or_high':'中高血栓风险',
     'Pain_history_No':'疼痛史',
     'Triglycerides':'术前血清甘油三酯水平',
     'Total_Bilirubin':'术前血清总胆红素水平',
-    'PSQI_fell_too_hot':'PSQI-感觉热',
+    'PSQI_fell_too_hot':'PSQI：感觉热',
     'Education_Junior  school and below':'小学及以下文化水平',
     'Aspartate_Aminotransferase':"术前血清谷草转氨酶水平",
-    'Hospitalizing_expenses':'住院费用'
+    'Surgical_season_冬':'冬季手术',
+    'Surgery_site_Head and neck':'头颈部手术',
+    'PSSS_others_console_me_No_or_neutrality':'PSSS：当我有困难时，有些人能够安慰到我',
+    'IES_other_things_kept_making_me_think_about_it_No':'IES-R：别的东西也会让我想起本次疾病',
+    'IES_irritable_and_angry_No':'IES-R：我感觉我易受刺激、易发怒',
+    'Sleep_PSQI_v0':'术前睡眠障碍',
+    'map__first_location_of_minimum':'术中平均动脉压最低值出现时间',
+    'SPO2__last_location_of_minimum':'术中脉搏血氧饱和度最低值出现时间',
+    'pulse__agg_linear_trend__attr_rvalue__chunk_len_10__f_agg_mean':'术中心率变化线性趋势',
+    'rr__fft_coefficient__attr_angle__coeff_3':'术中呼吸频率波动相位',
+    'co2__agg_linear_trend__attr_rvalue__chunk_len_10__f_agg_mean':'术中呼气末二氧化碳变化线性趋势',
+    'map__fft_coefficient__attr_angle__coeff_4':'术中平均动脉压波动相位'
 }
 
 
-# In[24]:
+# In[31]:
 
 
 st.title("CPSP Prediction")
 inputs = {}
 
 # 定义哪些特征是二元的
-binary_features = ["Gender", "Postoperative_drainage_Yes", "PHQ_trouble_in_sleep",
-                  "Surgical_season_秋", 'Operation_grading_III',
-                  'Surgery_site_Abdominal','Open_surgery',
-                  'Thrombus_risk_No',
-                  'Surgery_site_Surface or limb',
-                  'PSQI_fell_too_hot',
-                  'IES_did_not_deal_with_them_No']  # 示例：这些特征只能取0或1
+binary_features = ["Gender", "Postoperative_drainage_No", "Operation_grading_III",
+                  "PHQ_trouble_in_sleep", 'Surgical_season_冬',
+                  'Surgery_site_Surface or limb','Thrombus_risk_No',
+                  'IES_did_not_deal_with_them_No',
+                  'Surgical_season_秋',
+                  'Open_surgery',
+                  'Surgery_site_Abdominal',
+                  'GAD_easily_annoyed_or_irritable']  # 示例：这些特征只能取0或1
 
 for feature in selected_features:
     display_name = clinical_feature_names.get(feature, feature)  # 获取临床名称
@@ -163,7 +167,7 @@ for feature in selected_features:
             )
 
 
-# In[23]:
+# In[32]:
 
 
 if st.button("Predict"):
