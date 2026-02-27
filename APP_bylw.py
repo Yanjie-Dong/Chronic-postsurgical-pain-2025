@@ -166,7 +166,7 @@ clinical_feature_names = {
 }
 
 # 主界面标题
-st.markdown('<div class="main-header">术后慢性疼痛预测模型 (CSAC)</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-header">术后慢性疼痛预测模型</div>', unsafe_allow_html=True)
 
 # 创建两列布局，添加一些间距
 col1, col2 = st.columns(2, gap="large")
@@ -190,8 +190,6 @@ right_features = selected_features[mid_point:]
 
 # 左侧特征输入
 with col1:
-    st.markdown('<div class="input-container">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">患者基本信息</div>', unsafe_allow_html=True)
     
     for feature in left_features:
         display_name = clinical_feature_names.get(feature, feature)
@@ -234,8 +232,6 @@ with col1:
 
 # 右侧特征输入
 with col2:
-    st.markdown('<div class="input-container">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">临床与监测参数</div>', unsafe_allow_html=True)
     
     for feature in right_features:
         display_name = clinical_feature_names.get(feature, feature)
@@ -322,4 +318,4 @@ with col_btn2:
 
 # 页脚信息
 st.markdown("---")
-st.caption("术后慢性疼痛预测模型 | 仅供临床研究使用")
+st.caption("术后慢性疼痛预测模型")
